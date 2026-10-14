@@ -1,5 +1,3 @@
-# tasktracker-projeto
-
 # GERENCIADOR DE TAREFAS
 
 ## 1.2 O problema a ser resolvido

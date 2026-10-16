@@ -1,7 +1,4 @@
-"""
-TaskTracker - Gerenciador de Tarefas (CLI)
-Bootcamp II - Fase 2
-"""
+
 
 # =====================================================================
 # 1. ESTRUTURA DE DADOS
@@ -16,6 +13,8 @@ PRIORIDADES_VALIDAS = {
     "baixa": "Baixa",
 }
 
+ORDEM_PRIORIDADE = {"Alta": 1, "Média": 2, "Baixa": 3}
+
 
 # =====================================================================
 # 2. TRATAMENTO DE ENTRADAS (VALIDAÇÕES)
@@ -25,6 +24,13 @@ def validar_titulo(titulo):
     return titulo.strip() != ""
 
 
+def titulo_ja_existe(titulo):
+    for tarefa in tarefas:
+        if tarefa["titulo"].lower() == titulo.strip().lower():
+            return True
+    return False
+
+
 def normalizar_prioridade(prioridade):
     return PRIORIDADES_VALIDAS.get(prioridade.strip().lower())
 
@@ -32,9 +38,12 @@ def normalizar_prioridade(prioridade):
 def ler_titulo():
     while True:
         titulo = input("Título: ")
-        if validar_titulo(titulo):
+        if not validar_titulo(titulo):
+            print("❌ Erro: o título é obrigatório e não pode ficar em branco. Tente novamente.")
+        elif titulo_ja_existe(titulo):
+            print(f"❌ Erro: já existe uma tarefa com o título '{titulo.strip()}'. Digite outro título.")
+        else:
             return titulo
-        print("❌ Erro: o título é obrigatório e não pode ficar em branco. Tente novamente.")
 
 
 def ler_prioridade():
@@ -83,7 +92,9 @@ def visualizar_tarefas():
         print("📭 Nenhuma tarefa cadastrada no momento.")
         return
 
-    for numero, tarefa in enumerate(tarefas, start=1):
+    tarefas_ordenadas = sorted(tarefas, key=lambda t: ORDEM_PRIORIDADE[t["prioridade"]])
+
+    for numero, tarefa in enumerate(tarefas_ordenadas, start=1):
         print(f"\nTarefa #{numero}")
         print("-" * 40)
         print(f"  Título      : {tarefa['titulo']}")
@@ -92,7 +103,9 @@ def visualizar_tarefas():
         print(f"  Data limite : {tarefa['data_limite'] or '(não informada)'}")
         print(f"  Status      : {tarefa['status']}")
     print("-" * 40)
-    print(f"Total: {len(tarefas)} tarefa(s).")
+    pendentes = sum(1 for t in tarefas if t["status"] == "Pendente")
+    concluidas = sum(1 for t in tarefas if t["status"] == "Concluída")
+    print(f"Total: {len(tarefas)} tarefa(s) | Pendentes: {pendentes} | Concluídas: {concluidas}")
 
 
 # =====================================================================

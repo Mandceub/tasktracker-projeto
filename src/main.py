@@ -9,9 +9,45 @@ Bootcamp II - Fase 2
 
 tarefas = []
 
+PRIORIDADES_VALIDAS = {
+    "alta": "Alta",
+    "média": "Média",
+    "media": "Média",
+    "baixa": "Baixa",
+}
+
 
 # =====================================================================
-# 2. CADASTRO
+# 2. TRATAMENTO DE ENTRADAS (VALIDAÇÕES)
+# =====================================================================
+
+def validar_titulo(titulo):
+    return titulo.strip() != ""
+
+
+def normalizar_prioridade(prioridade):
+    return PRIORIDADES_VALIDAS.get(prioridade.strip().lower())
+
+
+def ler_titulo():
+    while True:
+        titulo = input("Título: ")
+        if validar_titulo(titulo):
+            return titulo
+        print("❌ Erro: o título é obrigatório e não pode ficar em branco. Tente novamente.")
+
+
+def ler_prioridade():
+    while True:
+        entrada = input("Prioridade (Alta / Média / Baixa): ")
+        prioridade = normalizar_prioridade(entrada)
+        if prioridade is not None:
+            return prioridade
+        print(f"❌ Erro: prioridade '{entrada}' inválida. Digite apenas Alta, Média ou Baixa.")
+
+
+# =====================================================================
+# 3. CADASTRO
 # =====================================================================
 
 def criar_tarefa(titulo, descricao, prioridade, data_limite):
@@ -26,9 +62,9 @@ def criar_tarefa(titulo, descricao, prioridade, data_limite):
 
 def cadastrar_tarefa():
     print("\n--- CADASTRAR NOVA TAREFA ---")
-    titulo = input("Título: ")
+    titulo = ler_titulo()
     descricao = input("Descrição: ")
-    prioridade = input("Prioridade (Alta / Média / Baixa): ")
+    prioridade = ler_prioridade()
     data_limite = input("Data limite (ex.: DD/MM/AAAA): ")
 
     tarefa = criar_tarefa(titulo, descricao, prioridade, data_limite)
@@ -37,7 +73,7 @@ def cadastrar_tarefa():
 
 
 # =====================================================================
-# 3. LISTAGEM
+# 4. LISTAGEM
 # =====================================================================
 
 def visualizar_tarefas():
@@ -60,7 +96,7 @@ def visualizar_tarefas():
 
 
 # =====================================================================
-# 4. MENU E LOOP PRINCIPAL
+# 5. MENU E LOOP PRINCIPAL
 # =====================================================================
 
 def exibir_menu():

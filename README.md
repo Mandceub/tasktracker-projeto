@@ -120,7 +120,3 @@ docker compose run --rm --name tasktracker-app tasktracker
    ```
    No Windows, use `python src/main.py`.
 
-## Próximos passos
-
-- Implementar a opção de marcar tarefa como concluída (prevista no planejamento da Fase 1).
-- Implementar a persistência dos dados, para que as tarefas não se percam ao encerrar a aplicação.

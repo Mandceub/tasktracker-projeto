@@ -1,6 +1,6 @@
 # TaskTracker – Gerenciador de Tarefas
 
-Aplicação de linha de comando (CLI) em Python para cadastrar e visualizar tarefas, desenvolvida na **Fase 2 (Entrega Intermediária)** do Bootcamp II.
+Aplicação de linha de comando (CLI) em Python para cadastrar e visualizar tarefas, desenvolvida no Bootcamp II e **conteinerizada com Docker na Fase 3 (Entrega Final)**.
 
 ## O problema a ser resolvido
 
@@ -37,6 +37,8 @@ A aplicação funciona por meio de um menu contínuo no terminal:
 ## Tecnologias utilizadas
 
 - **Python 3** (apenas biblioteca padrão, sem dependências externas)
+- **Docker** para conteinerização da aplicação
+- **Docker Compose** para orquestrar a execução interativa
 - **Git** para versionamento
 - **GitHub** para hospedagem do repositório
 - **VS Code** como editor
@@ -47,23 +49,70 @@ A aplicação funciona por meio de um menu contínuo no terminal:
 tasktracker-projeto/
 ├── README.md                    # Documentação do projeto
 ├── .gitignore                   # Arquivos ignorados pelo Git
+├── Dockerfile                   # Receita para construir a imagem Docker
+├── docker-compose.yml           # Configuração da execução interativa do container
 ├── docs/
 │   └── planejamento_logico.pdf  # Planejamento da Fase 1
 └── src/
     └── main.py                  # Código-fonte da aplicação
 ```
 
-## Instalação e execução
+## Executando com Docker (recomendado)
+
+**Pré-requisito:** Docker Desktop instalado e aberto.
+
+Clone o repositório e entre na pasta do projeto:
+
+```bash
+git clone https://github.com/Mandceub/tasktracker-projeto.git
+```
+
+```bash
+cd tasktracker-projeto
+```
+
+### 1. Construir a imagem
+
+```bash
+docker build -t tasktracker .
+```
+
+### 2. Rodar o container em modo isolado
+
+```bash
+docker run -it --rm tasktracker
+```
+
+O `-it` é necessário porque a aplicação usa `input()`: o `-i` mantém a entrada de dados aberta e o `-t` cria um terminal para o menu interativo.
+
+### 3. Rodar via orquestração (recomendado)
+
+```bash
+docker compose run --rm tasktracker
+```
+
+O `docker compose run` gera um nome automático para o container. Para usar o nome definido no `docker-compose.yml` (`tasktracker-app`), rode:
+
+```bash
+docker compose run --rm --name tasktracker-app tasktracker
+```
+
+### Dockerfile x docker-compose.yml
+
+- **Dockerfile:** é a receita que gera a imagem. Define a imagem base (Python 3.11), copia o código para dentro do container e indica o comando que inicia a aplicação.
+- **docker-compose.yml:** orquestra a execução do container. Guarda as configurações em um arquivo, como o nome do container e as opções `stdin_open: true` (entrada de dados aberta) e `tty: true` (terminal virtual), que permitem usar o menu interativo.
+
+## Executando sem Docker (Python local)
 
 **Pré-requisitos:** Python 3 e Git instalados.
 
 1. Clone o repositório:
    ```bash
-   git clone https://github.com/SEU-USUARIO/NOME-DO-REPOSITORIO.git
+   git clone https://github.com/Mandceub/tasktracker-projeto.git
    ```
 2. Entre na pasta do projeto:
    ```bash
-   cd NOME-DO-REPOSITORIO
+   cd tasktracker-projeto
    ```
 3. Execute a aplicação:
    ```bash
@@ -73,5 +122,5 @@ tasktracker-projeto/
 
 ## Próximos passos
 
-
-- Fase 3: empacotamento da aplicação, containerização com Docker, testes e deploy.
+- Implementar a opção de marcar tarefa como concluída (prevista no planejamento da Fase 1).
+- Implementar a persistência dos dados, para que as tarefas não se percam ao encerrar a aplicação.
